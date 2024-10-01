@@ -5,7 +5,7 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <form [formGroup]="myForm">
+  <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
     <h2>Select your pizza toppings!</h2>
     <p>There are no limits here</p>
 
@@ -14,6 +14,7 @@
       <app-checkbox value="ham" label="Ham"></app-checkbox>
       <app-checkbox value="pineapple" label="Pineapple"></app-checkbox>
     </app-checkbox-group>
+    <ion-button type="submit" expand="block">Submit</ion-button>
   </form>
 
   <ion-card>

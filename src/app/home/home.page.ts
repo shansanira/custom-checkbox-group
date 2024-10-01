@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
@@ -8,8 +8,12 @@ import { FormBuilder } from '@angular/forms';
 })
 export class HomePage {
   public myForm = this.fb.group({
-    toppings: [[]],
+    toppings: [[], Validators.required],
   });
 
   constructor(private fb: FormBuilder) {}
+
+  onSubmit(): void {
+    console.log('form values: ', this.myForm);
+  }
 }

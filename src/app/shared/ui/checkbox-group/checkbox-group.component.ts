@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Component, forwardRef, OnInit, Self } from '@angular/core';
+import { ControlValueAccessor, FormControl, FormControlDirective,
+         FormControlName, FormGroupDirective, NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
 
 @Component({
   selector: 'app-checkbox-group',
@@ -8,15 +9,36 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: CheckboxGroupComponent,
+      useExisting: forwardRef(() => CheckboxGroupComponent),
       multi: true,
     },
   ],
 })
-export class CheckboxGroupComponent implements ControlValueAccessor {
+export class CheckboxGroupComponent implements ControlValueAccessor, OnInit {
   value: string[] = [];
+  control: FormControl | null;
+  injector: any;
 
-  constructor() {}
+  ngOnInit(): void {
+    this.setFormControl();
+  }
+
+  setFormControl() {
+    try {
+      const formControl = this.injector.get(NgControl);
+
+      switch (formControl.constructor) {
+        case FormControlName:
+          this.control = this.injector.get(FormGroupDirective).getControl(formControl as FormControlName);
+          break;
+        default:
+          this.control = (formControl as FormControlDirective).form as FormControl;
+          break;
+      }
+    } catch (_error) {
+      this.control = new FormControl();
+    }
+  }
 
   onChange = (value: string[]) => {};
   onTouch = () => {};
@@ -56,5 +78,13 @@ export class CheckboxGroupComponent implements ControlValueAccessor {
 
   isSelected(valueToCheck: string) {
     return this.value.includes(valueToCheck);
+  }
+
+  getErrorClass() {
+    if (this.control) {
+    // this always returns false
+    console.log(this.control?.invalid, this.control?.touched, this.control?.dirty);
+    return this.control?.invalid && this.control?.touched && this.control?.dirty ? 'border-error' : 'border-field';
+    }
   }
 }

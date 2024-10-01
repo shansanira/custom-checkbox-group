@@ -1,4 +1,4 @@
 <ion-item (click)="checkboxGroup.toggleValue(value)" button detail="false">
   <ion-label>{{ label }}</ion-label>
-  <ion-checkbox [checked]="checkboxGroup.isSelected(value)"></ion-checkbox>
+  <ion-checkbox [checked]="checkboxGroup.isSelected(value)" [ngClass]="checkboxGroup.getErrorClass()"></ion-checkbox>
 </ion-item>
